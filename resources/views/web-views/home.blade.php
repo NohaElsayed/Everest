@@ -1047,8 +1047,8 @@
     @php($business_mode=\App\CPU\Helpers::get_business_settings('business_mode'))
     {{--categries--}}
     <div class="container rtl">
-        <div class="row">
-            @if ($business_mode == 'multi')
+        {{-- <div class="row"> --}}
+            {{-- @if ($business_mode == 'multi')
                 <div class="col-md-6 {{Session::get('direction') === "rtl" ? 'pr-0' : 'pl-0'}}">
                     <div class="card" style="min-height: 380px;">
                         <div class="card-body">
@@ -1118,10 +1118,10 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
         <!-- top sellers -->
 
-            @if ($business_mode == 'multi')
+            {{-- @if ($business_mode == 'multi')
                 @if(count($top_sellers) > 0)
                     <div class="col-md-6 mt-2 mt-md-0 seller-card" >
                         <div class="card" style="min-height: 383px;">
@@ -1161,8 +1161,8 @@
                         </div>
                     </div>
                 @endif
-            @endif
-        </div>
+            @endif --}}
+        {{-- </div> --}}
     </div>
 
 

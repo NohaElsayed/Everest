@@ -256,7 +256,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\xampp\\htdocs\\6valley\\storage\\framework/cache/data',
+        'path' => 'C:\\xampp\\htdocs\\Everest\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -393,10 +393,10 @@
     'convert_entities' => true,
     'options' => 
     array (
-      'font_dir' => 'C:\\xampp\\htdocs\\6valley\\storage\\fonts',
-      'font_cache' => 'C:\\xampp\\htdocs\\6valley\\storage\\fonts',
+      'font_dir' => 'C:\\xampp\\htdocs\\Everest\\storage\\fonts',
+      'font_cache' => 'C:\\xampp\\htdocs\\Everest\\storage\\fonts',
       'temp_dir' => 'C:\\Users\\Noha\\AppData\\Local\\Temp',
-      'chroot' => 'C:\\xampp\\htdocs\\6valley',
+      'chroot' => 'C:\\xampp\\htdocs\\Everest',
       'allowed_protocols' => 
       array (
         'file://' => 
@@ -442,12 +442,12 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\xampp\\htdocs\\6valley\\storage\\app',
+        'root' => 'C:\\xampp\\htdocs\\Everest\\storage\\app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\xampp\\htdocs\\6valley\\storage\\app/public',
+        'root' => 'C:\\xampp\\htdocs\\Everest\\storage\\app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -527,13 +527,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\xampp\\htdocs\\6valley\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\Everest\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\xampp\\htdocs\\6valley\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\Everest\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -583,7 +583,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\xampp\\htdocs\\6valley\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\Everest\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -606,7 +606,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\xampp\\htdocs\\6valley\\resources\\views/vendor/mail',
+        0 => 'C:\\xampp\\htdocs\\Everest\\resources\\views/vendor/mail',
       ),
     ),
     'log_channel' => NULL,
@@ -634,7 +634,7 @@
       'mode' => 'sandbox',
       'http.ConnectionTimeOut' => 30,
       'log.LogEnabled' => true,
-      'log.FileName' => 'C:\\xampp\\htdocs\\6valley\\storage/logs/paypal.log',
+      'log.FileName' => 'C:\\xampp\\htdocs\\Everest\\storage/logs/paypal.log',
       'log.LogLevel' => 'ERROR',
     ),
   ),
@@ -805,7 +805,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\xampp\\htdocs\\6valley\\storage\\framework/sessions',
+    'files' => 'C:\\xampp\\htdocs\\Everest\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -878,9 +878,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\6valley\\resources\\views',
+      0 => 'C:\\xampp\\htdocs\\Everest\\resources\\views',
     ),
-    'compiled' => 'C:\\xampp\\htdocs\\6valley\\storage\\framework\\views',
+    'compiled' => 'C:\\xampp\\htdocs\\Everest\\storage\\framework\\views',
   ),
   'flare' => 
   array (
