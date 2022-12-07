@@ -1694,4 +1694,5 @@
   'notes' => 'Notes',
   'services Order' => 'Services Order',
   'Update delivery-man' => 'Update delivery-man',
+  'you_can_not_change_others_profile' => 'You can not change others profile',
 );

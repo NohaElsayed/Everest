@@ -190,13 +190,13 @@
                                 </div>
 
                                 <div class="dropdown-divider"></div>
-                               {{-- @if(auth('employ')->user()) --}}
-                                {{-- <a class="dropdown-item"
-                                   href="{{route('seller.profile.update',auth('employ')->user()->id)}}">
+                               @if(auth('employ')->user()) 
+                                <a class="dropdown-item"
+                                   href="{{route('admin-delivery.delivery-man.profile',auth('employ')->user()->id)}}">
                                     <span class="text-truncate pr-2"
                                           title="Settings">{{\App\CPU\translate('Settings')}}</span>
-                                </a> --}}
-                                {{-- @endif --}}
+                                </a>
+                                 @endif
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="javascript:" onclick="Swal.fire({

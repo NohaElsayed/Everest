@@ -297,7 +297,7 @@
                          <li class="nav-item {{Request::is('seller/product/list')?'active':''}}">
                             <a class="nav-link " href="{{route('seller.service.serviceorder')}}">
                                 <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{\App\CPU\translate('services Order')}}</span>
+                                <span class="text-truncate">{{\App\CPU\translate('service Orders')}}</span>
                             </a>
                         </li>
                           @endcan

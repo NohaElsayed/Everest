@@ -622,6 +622,10 @@ Route::group(['namespace' => 'Admin-delivery', 'prefix' => 'admin-delivery', 'as
     Route::delete('delete/{id}', [App\Http\Controllers\delivery\DeliveryManController::class, 'delete'])->name('delete');
     Route::post('search', [App\Http\Controllers\delivery\DeliveryManController::class, 'search'])->name('search');
     Route::post('status-update', [App\Http\Controllers\delivery\DeliveryManController::class, 'status'])->name('status-update');
+
+    Route::get('profile',[App\Http\Controllers\delivery\deliveryController::class,'profile'])->name('profile');
+    Route::post('update/{id}',[App\Http\Controllers\delivery\deliveryController::class,'update_profile'])->name('update');
+   Route::post('settings-password', [App\Http\Controllers\delivery\deliveryController::class, 'settings_password_update'])->name('settings-password');
 });
       //order management
     Route::group(['prefix' => 'orders', 'as' => 'orders.',], function () {
