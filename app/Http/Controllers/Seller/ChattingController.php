@@ -64,6 +64,16 @@ class ChattingController extends Controller
         $last_chat->seen_by_seller = 0;
         $last_chat->save();
 
+        $seen_chats = Chatting::where('seller_id', auth('seller')->id())
+            ->where('user_id', $request->user_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        foreach ($seen_chats as $seen_chat) {
+            $seen = Chatting::find($seen_chat->id);
+            $seen->seen_by_seller = 0;
+            $seen->save();
+        }
         $sellers = Chatting::join('users', 'users.id', '=', 'chattings.user_id')
             ->select('chattings.*', 'users.f_name', 'users.l_name', 'users.image')
             ->where('chattings.shop_id', $shop_id)
@@ -71,36 +81,64 @@ class ChattingController extends Controller
             ->orderBy('created_at', 'ASC')
             ->get();
 
+
         return response()->json($sellers);
     }
 
     // Store massage
     public function seller_message_store(Request $request)
     {
-        if ($request->message == '') {
-            Toastr::warning('Type Something!');
-            return response()->json(['message' =>'type something!']);
-        } else {
+        if ($request->message != '' || $request->hasFile('photo') || $request->hasFile('video') || $request->hasFile('audio')){
             if(auth('seller')->user()->added != null){
                 $shop_id= auth('seller')->user()->added;}
-                else{
-            $shop_id = Shop::where('seller_id', auth('seller')->id())->first()->id;
-                }
+            else{
+                $shop_id = Shop::where('seller_id', auth('seller')->id())->first()->id;
+            }
             $message = $request->message;
             $time = now();
-
+            $image =null;
+            $video =null;
+            $audio =null;
+            if ($request->hasFile('photo')) {
+                $file =$request->file('photo');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.' . $extension;
+                $file->move(public_path('uploads/photo/'), $filename);
+                $image= url('public/uploads/photo/').'/'.$filename;
+            }
+            if ($request->hasFile('audio')) {
+                $file =$request->file('audio');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.mp3';
+                $file->move(public_path('uploads/audio/'), $filename);
+                $audio= url('public/uploads/audio/').'/'.$filename;
+            }
+            if ($request->hasFile('video')) {
+                $file =$request->file('video');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.' . $extension;
+                $file->move(public_path('uploads/video/'), $filename);
+                $video= url('public/uploads/video/').'/'.$filename;
+            }
             DB::table('chattings')->insert([
                 'user_id'        => $request->user_id, //user_id == seller_id
                 'seller_id'      => auth('seller')->id(),
                 'shop_id'        => $shop_id,
                 'message'        => $request->message,
-                'photo'        => $request->photo,
+                'photo'          => $image,
+                'audio'          => $audio,
+                'video'          => $video,
+                'type'           => $request->type,
                 'sent_by_seller' => 1,
                 'seen_by_seller' => 0,
                 'created_at'     => now(),
             ]);
 
-            return response()->json(['message' => $message, 'time' => $time]);
+            return response()->json(['message' => $message , 'photo'=>$image , 'audio'=>$audio, 'video'=>$video , 'type'=>$request->type , 'time' => $time]);
+
+        } else {
+            Toastr::warning('Type Something!');
+            return response()->json(['message' =>'type something!']);
 
         }
     }

@@ -324,9 +324,19 @@
                                                     </div>
                                                     <div class="received_msg">
                                                         <div class="received_withd_msg">
-                                                            <p>
-                                                                {{$message->message}}
-                                                            </p>
+                                                            @if($message->type == 'text')
+                                                                <p>
+                                                                    {{$message->message}}
+                                                                </p>
+                                                            @elseif($message->type == 'photo')
+                                                                <img class="img-thumbnail"  src="{{$message->photo}}">
+                                                            @elseif($message->type == 'video')
+                                                                <div class="embed-responsive embed-responsive-1by1">
+                                                                    <video class="embed-responsive-item" controls src="{{$message->video}}"></video>
+                                                                </div>
+                                                            @elseif($message->type == 'audio')
+                                                                <audio controls src="{{$message->audio}}"></audio>
+                                                            @endif
                                                             <span class="time_date"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
                                                         </div>
                                                     </div>
@@ -334,32 +344,47 @@
                                             @else
                                                 <div class="outgoing_msg">
                                                     <div class="sent_msg">
-                                                        <p>
-                                                            {{$message->message}}
-                                                        </p>
+                                                        @if($message->type == 'text')
+                                                            <p>
+                                                                {{$message->message}}
+                                                            </p>
+                                                        @elseif($message->type == 'photo')
+                                                            <img class="img-thumbnail"  src="{{$message->photo}}">
+                                                        @elseif($message->type == 'video')
+                                                            <div class="embed-responsive embed-responsive-1by1">
+                                                            <video class="embed-responsive-item" controls src="{{$message->video}}"></video>
+                                                            </div>
+                                                            @elseif($message->type == 'audio')
+                                                            <audio controls src="{{$message->audio}}"></audio>
+                                                        @endif
                                                         <span class="time_date"> {{$message->created_at->format('h:i A')}}    |    {{$message->created_at->format('M d')}} </span>
                                                     </div>
                                                 </div>
                                             @endif
                                         @endForeach
                                     </div>
-                                    <div class="type_msg">
+                                    <div class="type_msg ">
                                         <div class="input_msg_write">
                                             <form
                                                 class="form-inline d-flex justify-content-center md-form form-sm active-cyan-2 mt-2"
-                                                id="myForm">
+                                                id="myForm" >
                                                 @csrf
                                                 <input type="text" id="hidden_value" hidden
                                                        value="{{$last_chat->user_id}}" name="">
                                                 <input
-                                                    class="form-control form-control-sm {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}} w-75"
-                                                    id="msgInputValue"
+                                                    class="form-control form-control-sm mb-1 {{Session::get('direction') === "rtl" ? 'ml-1' : 'mr-1'}} w-75"
+                                                    id="msgInputValue" style="background-color:#F7F8FA"
                                                     type="text" placeholder="{{\App\CPU\translate('Send a message')}}"
                                                     aria-label="Search">
+                                                <input type="file" class="d-none" id="photo-input-chat" name="photo" accept="image/*">
+                                                <a id="photo-input-chat-icon"><i class="fa fa-image h2 hover-zoom"></i></a> &nbsp;
+                                                <input type="file" class="d-none" id="video-input-chat" name="video" accept="video/*">
+                                                <a id="video-input-chat-icon"><i class="fa fa- fa-film h2 hover-zoom"></i></a> &nbsp;
+                                                <input type="file" class="d-none" id="audio-input-chat" name="audio" accept="audio/*">
+                                                <a id="audio-input-chat-icon"><i class="fa fa- fa-microphone h2 hover-zoom"></i></a> &nbsp;
                                                 <input class="aSend" type="submit" id="msgSendBtn" style="width: 45px;"
                                                        value="{{\App\CPU\translate('Send')}}">
                                                 <i class="fa fa-send" style="color: #92C6FF" aria-hidden="true"></i>
-
                                             </form>
                                         </div>
                                     </div>
@@ -422,28 +447,103 @@
                                 // let newDate = date.toString('dd-MM-yy');
 
                                 if (element.sent_by_seller) {
-                                    $(".msg_history").append(`
-                  <div class="outgoing_msg" id="outgoing_msg">
-                    <div class='sent_msg'>
-                      <p>${element.message}</p>
-                      <span class='time_date'> ${time}    |    ${date}</span>
-                    </div>
-                  </div>`
-                                    )
+                                    if (element.type == 'text'){
 
+                                        $(".msg_history").append(`
+                                            <div class="outgoing_msg" id="outgoing_msg">
+                                                <div class='sent_msg'>
+                                                    <p>${element.message}</p>
+                                                    <span class='time_date'> ${time}    |    ${date}</span>
+                                                  </div>
+                                                </div>`
+                                        )
+                                    }else if(element.type == 'photo'){
+
+                                        $(".msg_history").append(`
+                                            <div class="outgoing_msg" id="outgoing_msg">
+                                                  <div class='sent_msg'>
+                                                    <img src="${element.photo}"  class="img-thumbnail">
+                                                    <span class='time_date'> ${time}    |    ${date}</span>
+                                                  </div>
+                                                </div>`
+                                        )
+                                    }else if(element.type == 'video'){
+                                        $(".msg_history").append(`
+                                            <div class="outgoing_msg" id="outgoing_msg">
+                                                  <div class='sent_msg'>
+                                                    <div class="embed-responsive embed-responsive-1by1">
+                                                        <video class="embed-responsive-item" controls src="${element.video}"></video>
+                                                   </div>
+                                                    <span class='time_date'> ${time}    |    ${date}</span>
+                                                  </div>
+                                                </div>`
+                                        )
+                                    }else if(element.type == 'audio'){
+                                        $(".msg_history").append(`
+                                            <div class="outgoing_msg" id="outgoing_msg">
+                                                  <div class='sent_msg'>
+                                                       <audio controls src="${element.audio}"></audio>
+                                                    <span class='time_date'> ${time}    |    ${date}</span>
+                                                  </div>
+                                                </div>`
+                                        )
+                                    }
                                 } else {
-                                    $(".msg_history").append(`
-                  <div class="incoming_msg" id="incoming_msg">
-                    <div class="incoming_msg_img" id="">
-                      <img src="${window.location.origin}/storage/app/public/profile/${element.image}" style="border-radius: 10px;" alt="">
-                    </div>
-                    <div class="received_msg">
-                      <div class="received_withd_msg">
-                        <p id="receive_msg">${element.message}</p>
-                      <span class="time_date"> ${time}    |    ${date}</span></div>
-                    </div>
-                  </div>`
-                                    )
+                                    if (element.type == 'text'){
+
+                                        $(".msg_history").append(`
+                                          <div class="incoming_msg" id="incoming_msg">
+                                            <div class="incoming_msg_img" id="">
+                                              <img src="${window.location.origin}/storage/app/public/profile/${element.image}" style="border-radius: 10px;" alt="">
+                                            </div>
+                                            <div class="received_msg">
+                                              <div class="received_withd_msg">
+                                                <p id="receive_msg">${element.message}</p>
+                                              <span class="time_date"> ${time}    |    ${date}</span></div>
+                                            </div>
+                                          </div>`
+                                        )
+                                    }else if(element.type == 'photo'){
+
+                                        $(".msg_history").append(`
+                                          <div class="incoming_msg" id="incoming_msg">
+                                            <div class="incoming_msg_img" id="">
+                                              <img src="${window.location.origin}/storage/app/public/profile/${element.image}" style="border-radius: 10px;" alt="">
+                                            </div>
+                                            <div class="received_msg">
+                                              <div class="received_withd_msg">
+                                                    <img src="${element.photo}"  class=" img-thumbnail"></img>                                              <span class="time_date"> ${time}    |    ${date}</span></div>
+                                            </div>
+                                          </div>`
+                                        )
+                                    }else if(element.type == 'video'){
+                                        $(".msg_history").append(`
+                                          <div class="incoming_msg" id="incoming_msg">
+                                            <div class="incoming_msg_img" id="">
+                                              <img src="${window.location.origin}/storage/app/public/profile/${element.image}" style="border-radius: 10px;" alt="">
+                                            </div>
+                                            <div class="received_msg">
+                                              <div class="received_withd_msg">
+                                                <div class="embed-responsive embed-responsive-1by1">
+                                                        <video class="embed-responsive-item" controls src="${element.video}"></video>
+                                                   </div>                                              <span class="time_date"> ${time}    |    ${date}</span></div>
+                                            </div>
+                                          </div>`
+                                        )
+                                    }else if(element.type == 'audio'){
+                                        $(".msg_history").append(`
+                                          <div class="incoming_msg" id="incoming_msg">
+                                            <div class="incoming_msg_img" id="">
+                                              <img src="${window.location.origin}/storage/app/public/profile/${element.image}" style="border-radius: 10px;" alt="">
+                                            </div>
+                                            <div class="received_msg">
+                                              <div class="received_withd_msg">
+                                                               <audio controls src="${element.audio}"></audio>
+                                              <span class="time_date"> ${time}    |    ${date}</span></div>
+                                            </div>
+                                          </div>`
+                                        )
+                                    }
                                 }
                                 $('#hidden_value').attr("value", user_id);
                             });
@@ -477,7 +577,8 @@
 
                 let data = {
                     message: inputs,
-                    user_id: user_id
+                    user_id: user_id,
+                    type: 'text'
                 }
 
                 $.ajaxSetup({
@@ -515,6 +616,212 @@
             });
         });
     </script>
+    <script src="https://unpkg.com/mic-recorder-to-mp3@2.2.1/dist/index.js"></script>
+    <script>
+        $(document).ready(function () {
+            const button = document.querySelector('#audio-input-chat-icon');
+            const recorder = new MicRecorder({
+                bitRate: 128
+            });
+
+            button.addEventListener('click', startRecording);
+
+            function startRecording() {
+                recorder.start().then(() => {
+                    button.firstChild.classList.remove('fa-microphone');
+                    button.firstChild.classList.add('fa-microphone-slash');
+                    button.removeEventListener('click', startRecording);
+                    button.addEventListener('click', stopRecording);
+                }).catch((e) => {
+                    console.error(e);
+                });
+            }
+
+            function stopRecording() {
+                recorder.stop().getMp3().then(([buffer, blob]) => {
+                    console.log(buffer, blob);
+                    const file = new File(buffer, 'music.mp3', {
+                        type: blob.type,
+                        lastModified: Date.now()
+                    });
+                    // $("audio-input-chat").val(file);
+
+                        // get all the inputs into an array.
+                        var user_id = $('#hidden_value').val();
+
+                    let data = new FormData();
+                    data.append("audio", blob);
+                    data.append( "type","audio");
+                    data.append("user_id", user_id);
+
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            type: "post",
+                            url: '{{route('seller.messages.seller_message_store')}}',
+                            data: data,
+                            processData: false,
+                            contentType: false,
+                            success: function (respons) {
+
+                                let dateTime = new Date(respons.time);
+                                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                                let time = dateTime.toLocaleTimeString().toLowerCase();
+                                let date = month[dateTime.getMonth().toString()] + " " + dateTime.getDate().toString();
+
+                                $(".msg_history").append(`
+                                      <div class="outgoing_msg" id="outgoing_msg">
+                                        <div class='sent_msg'>
+                                            <audio controls src="${respons.audio}">
+                                            </audio>
+                                          <span class='time_date'> now </span>
+                                        </div>
+                                      </div>`
+                                )
+                            }
+                        });
+                        //scrolling
+                        $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 200);
+                        //remove value from input box
+                        $('#myForm').find('#msgInputValue').val('');
+
+                    // const li = document.createElement('li');
+                    // const player = new Audio(URL.createObjectURL(file));
+                    // player.controls = true;
+                    // li.appendChild(player);
+                    // document.querySelector('#playlist').appendChild(li);
+
+                    button.firstChild.classList.remove('fa-microphone-slash');
+                    button.firstChild.classList.add('fa-microphone');
+                    button.removeEventListener('click', stopRecording);
+                    button.addEventListener('click', startRecording);
+                }).catch((e) => {
+                    console.error(e);
+                });
+            }
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#photo-input-chat-icon').on("click",function (){
+                $('#photo-input-chat').click();
+                $('#photo-input-chat').change(function () {
+                    let file = $('#photo-input-chat').prop('files');
+                    let user_id = $('#hidden_value').val();
+                    console.log(file);
+                    let data = new FormData();
+                        data.append("photo", file[0]);
+                        data.append("type", "photo");
+                        data.append("user_id", user_id);
+
+
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                            }
+                        });
+
+                        $.ajax({
+                            type: "post",
+                            url: '{{route('seller.messages.seller_message_store')}}',
+                            data: data,
+                            processData: false, // important
+                            contentType: false, // important
+                            dataType : 'json',
+                            success: function (respons) {
+
+                                let dateTime = new Date(respons.time);
+                                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                                let time = dateTime.toLocaleTimeString().toLowerCase();
+                                let date = month[dateTime.getMonth().toString()] + " " + dateTime.getDate().toString();
+
+                                $(".msg_history").append(`
+                                              <div class="outgoing_msg" id="outgoing_msg">
+                                                <div class='sent_msg'>
+                                                    <img class="img-thumbnail"  src="${respons.photo}">
+                                                    </img>
+                                                  <span class='time_date'> now </span>
+                                                </div>
+                                              </div>`
+                                )
+                            }
+                        });
+                        //scrolling
+                        $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 200);
+                        //remove value from input box
+                        $('#myForm').find('#photo-input-chat').val('');
+                });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#video-input-chat-icon').on("click",function (){
+                $('#video-input-chat').click();
+                $('#video-input-chat').change(function () {
+                    let file = $('#video-input-chat').prop('files');
+                    let user_id = $('#hidden_value').val();
+                    console.log(file);
+                    let data = new FormData();
+                    data.append("video", file[0]);
+                    data.append("type", "video");
+                    data.append("user_id", user_id);
+
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: "post",
+                        url: '{{route('seller.messages.seller_message_store')}}',
+                        data: data,
+                        processData: false, // important
+                        contentType: false, // important
+                        dataType : 'json',
+                        success: function (respons) {
+
+                            let dateTime = new Date(respons.time);
+                            let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                            let time = dateTime.toLocaleTimeString().toLowerCase();
+                            let date = month[dateTime.getMonth().toString()] + " " + dateTime.getDate().toString();
+
+                            $(".msg_history").append(`
+                                              <div class="outgoing_msg" id="outgoing_msg">
+                                                <div class='sent_msg'>
+                                                    <div class="embed-responsive embed-responsive-1by1">
+                                                        <video class="embed-responsive-item" controls  src="${respons.video}">
+                                                        </video>
+                                                    </div>
+                                                  <span class='time_date'> now </span>
+                                                </div>
+                                              </div>`
+                            )
+                        }
+                    });
+                    //scrolling
+                    $(".msg_history").stop().animate({scrollTop: $(".msg_history")[0].scrollHeight}, 200);
+                    //remove value from input box
+                    $('#myForm').find('#photo-input-chat').val('');
+                });
+            });
+        });
+
+    </script>
+
 
 @endpush
 

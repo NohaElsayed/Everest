@@ -62,23 +62,52 @@ class ChattingController extends Controller
     public function messages_store(Request $request)
     {
 
-        if ($request->message == '') {
-            Toastr::warning('Type Something!');
-            return response()->json('type something!');
-        } else {
+        if ($request->message != '' || $request->hasFile('photo') || $request->hasFile('video') || $request->hasFile('audio')){
             $message = $request->message;
+            $time = now();
+            $image =null;
+            $video =null;
+            $audio =null;
+            if ($request->hasFile('photo')) {
+                $file =$request->file('photo');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.' . $extension;
+                $file->move(public_path('uploads/photo/'), $filename);
+                $image= url('public/uploads/photo/').'/'.$filename;
+            }
+            if ($request->hasFile('audio')) {
+                $file =$request->file('audio');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.mp3';
+                $file->move(public_path('uploads/audio/'), $filename);
+                $audio= url('public/uploads/audio/').'/'.$filename;
+            }
+            if ($request->hasFile('video')) {
+                $file =$request->file('video');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().'.' . $extension;
+                $file->move(public_path('uploads/video/'), $filename);
+                $video= url('public/uploads/video/').'/'.$filename;
+            }
             DB::table('chattings')->insert([
                 'user_id'          => auth('customer')->id(),
                 'shop_id'          => $request->shop_id,
                 'seller_id'        => $request->seller_id,
-
                 'message'          => $request->message,
+                'photo'            => $image,
+                'audio'            => $audio,
+                'video'            => $video,
+                'type'             => $request->type,
                 'sent_by_customer' => 1,
                 'seen_by_customer' => 0,
                 'created_at'       => now(),
             ]);
 
-            return response()->json($message);
+            return response()->json(['message' => $message , 'photo'=>$image , 'audio'=>$audio, 'video'=>$video , 'type'=>$request->type , 'time' => $time]);
+        } else {
+            Toastr::warning('Type Something!');
+            return response()->json('type something!');
+
         }
     }
 

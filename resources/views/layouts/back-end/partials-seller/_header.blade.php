@@ -114,7 +114,7 @@
                                 <i class="tio-email"></i>
                                 @php($message=\App\Model\Chatting::where(['seen_by_seller'=>1,'seller_id'=>auth('seller')->id()])->count())
                                 @if($message!=0)
-                                    <span class="btn-status btn-sm-status btn-status-danger">{{\App\Model\Chatting::where(['seen_by_seller'=>1,'seller_id'=>auth('seller')->id()])->count()}}</span>
+                                    <span class="btn-status btn-sm-status btn-status-danger">{{\App\Model\Chatting::where(['seen_by_seller'=>1,'sent_by_customer'=>1,'seller_id'=>auth('seller')->id()])->count()}}</span>
                                 @endif
                             </a>
                         </div>
@@ -183,7 +183,7 @@
                                             <span class="card-title h5">{{auth('employ')->user()->name}}</span>
 
                                             <span class="card-text">{{auth('employ')->user()->email}}</span>
-                                            
+
                                             @endif
                                         </div>
                                     </div>
@@ -285,7 +285,7 @@
                         @endif
                     </a>
                 </div>
-           
+
                 <div style="background:white;padding: 2px;border-radius: 5px;margin-top:10px;">
                     <a class="p-2"
                        href="{{route('seller.orders.list',['pending'])}}">
