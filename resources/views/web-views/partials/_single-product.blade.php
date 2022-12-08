@@ -13,7 +13,7 @@
         background: #ffffff;
     }
     .product-single-hover:hover > .single-product-details {
-        
+
         margin-top:-39px;
     }
     .product-single-hover:hover >  .quick-view{
@@ -22,7 +22,7 @@
 </style>
 
 <div class="product-single-hover" >
-    <div class=" inline_product clickable d-flex justify-content-center" 
+    <div class=" inline_product clickable d-flex justify-content-center"
             style="cursor: pointer;background:{{$web_config['primary_color']}}10;">
         @if($product->discount > 0)
             <div class="d-flex" style="left:7px;top:2px;position: absolute">
@@ -44,13 +44,13 @@
             <a href="{{route('product',$product->slug)}}">
                 <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                    style="width: 100%;border-radius: 5px 5px 0px 0px;">
+                    style="width: 100%;border-radius: 5px 5px 0px 0px;height:157px !important">
             </a>
         </div>
     </div>
-    <div class="single-product-details" style="position:relative;height:145px;padding-top:10px;border-radius: 0px 0px 5px 5px; ">
+    <div class="single-product-details" style="position:relative;height:145px;padding-top:10px;border-radius: 0px 0px 5px 5px;overflow: hidden ">
         <div class="text-{{Session::get('direction') === "rtl" ? 'right pr-3' : 'left pl-3'}}">
-            <a href="{{route('product',$product->slug)}}">
+            <a  href="{{route('product',$product->slug)}}">
                 {{ Str::limit($product['name'], 23) }}
             </a>
         </div>
@@ -80,7 +80,7 @@
                 </span>
             </div>
         </div>
-        
+
     </div>
     <div class="text-center quick-view" >
         @if(Request::is('product/*'))
@@ -98,5 +98,5 @@
         @endif
     </div>
 </div>
-    
+
 

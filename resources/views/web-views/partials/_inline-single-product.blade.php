@@ -100,7 +100,7 @@
             <img class="inline_product_image"
                  onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
                  src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                 width="100%" style="height: 100%;">
+                 width="100%" style="height:157px !important;">
         </a>
     </div>
     <div class="product_details {{$product['current_stock']==0?'stock-card':''}}">

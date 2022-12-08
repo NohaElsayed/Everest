@@ -13,7 +13,11 @@
     <meta property="twitter:url" content="{{env('APP_URL')}}">
     <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         .active{
             background: {{$web_config['secondary_color']}};
             color: gray!important;

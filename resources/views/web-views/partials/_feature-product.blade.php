@@ -13,7 +13,7 @@
         background: #ffffff;
     }
     .product-single-hover:hover > .single-product-details {
-        
+
         margin-top:-39px;
     }
     .product-single-hover:hover >  .quick-view{
@@ -22,7 +22,7 @@
 </style>
 
 <div class="product-single-hover" >
-    <div class="inline_product clickable d-flex justify-content-center" 
+    <div class="inline_product clickable d-flex justify-content-center"
             style="cursor: pointer;max-height: 193px;min-height: 193px;background:{{$web_config['primary_color']}}10;background-position: center center;background-size: cover;">
         @if($product->discount > 0)
             <div class="d-flex" style="left:5px;top:5px;position: absolute">
@@ -44,7 +44,7 @@
             <a href="{{route('product',$product->slug)}}">
                 <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                    style="width: 100%;border-radius:5px;">
+                    style="width: 100%;border-radius:5px;height: 157px !important;">
             </a>
         </div>
     </div>
@@ -80,7 +80,7 @@
                 </span>
             </div>
         </div>
-        
+
     </div>
     <div class="text-center quick-view" >
         @if(Request::is('product/*'))
@@ -98,4 +98,4 @@
         @endif
     </div>
 </div>
-    
+

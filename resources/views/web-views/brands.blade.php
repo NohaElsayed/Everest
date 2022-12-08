@@ -12,7 +12,11 @@
     <meta property="twitter:title" content="Brands of {{$web_config['name']->value}}"/>
     <meta property="twitter:url" content="{{env('APP_URL')}}">
     <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         .brand_div {
             background: #fcfcfc no-repeat padding-box;
             border: 1px solid #e2f0ff;

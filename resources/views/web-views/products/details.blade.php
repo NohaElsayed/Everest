@@ -197,6 +197,9 @@
     $rating = \App\CPU\ProductManager::get_rating($product->reviews);
     $decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings');
     ?>
+
+
+
     <!-- Page Content-->
     <div class="container mt-4 rtl" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
         <!-- General info tab-->
@@ -465,13 +468,7 @@
                                             <!-- Tech specs tab-->
                                             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                                                 <div class="row pt-2 specification">
-                                                    @if($product->video_url!=null)
-                                                        <div class="col-12 mb-4">
-                                                            <iframe width="420" height="315"
-                                                                    src="{{$product->video_url}}">
-                                                            </iframe>
-                                                        </div>
-                                                    @endif
+
 
                                                     <div class="text-body col-lg-12 col-md-12" style="overflow: scroll;">
                                                         {!! $product['details'] !!}

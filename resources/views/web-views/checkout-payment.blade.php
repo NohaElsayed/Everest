@@ -3,7 +3,11 @@
 @section('title',\App\CPU\translate('Choose Payment Method'))
 
 @push('css_or_js')
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         .stripe-button-el {
             display: none !important;
         }
@@ -56,7 +60,7 @@
                         @php($coupon_discount = session()->has('coupon_discount') ? session('coupon_discount') : 0)
                         @php($amount = \App\CPU\CartManager::cart_grand_total() - $coupon_discount)
                         @php($digital_payment=\App\CPU\Helpers::get_business_settings('digital_payment'))
-                        
+
                         @if ($digital_payment['status']==1)
                             @php($config=\App\CPU\Helpers::get_business_settings('wallet_status'))
                             @if($config==1)
@@ -66,7 +70,7 @@
                                             {{-- <form action="{{route('checkout-complete-wallet')}}" method="get" class="needs-validation"> --}}
                                                 <button class="btn btn-block click-if-alone" type="submit"
                                                     data-toggle="modal" data-target="#wallet_submit_button">
-                                                
+
                                                     <img width="150" style="margin-top: -10px"
                                                         src="{{asset('public/assets/front-end/img/wallet.png')}}"/>
                                                 </button>
@@ -111,7 +115,7 @@
                                 </div>
                             @endif
 
-                           
+
 
                             @php($config=\App\CPU\Helpers::get_business_settings('stripe'))
                             @if($config['status'])
@@ -154,7 +158,7 @@
                             @php($inr=\App\Model\Currency::where(['symbol'=>'₹'])->first())
                             @php($usd=\App\Model\Currency::where(['code'=>'USD'])->first())
                             @if(isset($inr) && isset($usd) && $config['status'])
-                            
+
                                 <div class="col-md-6 mb-4" style="cursor: pointer">
                                     <div class="card">
                                         <div class="card-body" style="height: 100px">
@@ -390,7 +394,7 @@
                                 </div>
                             @endif
                         @endif
-                        
+
                     </div>
                     <!-- Navigation (desktop)-->
                     <div class="row">
@@ -431,7 +435,7 @@
                         <input class="form-control" type="text" value="{{\App\CPU\Helpers::currency_converter($customer_balance)}}" readonly>
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label for="">{{\App\CPU\translate('order_amount')}}</label>
@@ -447,7 +451,7 @@
                         @endif
                     </div>
                 </div>
-            
+
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{\App\CPU\translate('close')}}</button>

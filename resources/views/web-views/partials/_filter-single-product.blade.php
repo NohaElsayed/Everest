@@ -1,6 +1,9 @@
 @php($overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews))
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
 <style>
+    body{
+        font-family: 'Cairo', sans-serif;
+    }
     .quick-view{
         display: none;
         padding-bottom: 8px;
@@ -41,7 +44,7 @@
             <a href="{{route('product',$product->slug)}}">
                 <img src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                    style="width: 100%;border-radius:5px 5px 0px 0px;">
+                    style="width: 100%;border-radius:5px 5px 0px 0px;height:157px !important;">
             </a>
         </div>
     </div>

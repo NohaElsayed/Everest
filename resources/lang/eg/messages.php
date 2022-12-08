@@ -1695,4 +1695,10 @@
   'services Order' => 'Services Order',
   'Update delivery-man' => 'Update delivery-man',
   'you_can_not_change_others_profile' => 'You can not change others profile',
+  'service Orders' => 'Service Orders',
+  'Create' => 'Create',
+  'Seller ' => 'Seller ',
+  'Sign Up' => 'Sign Up',
+  'Customer ' => 'Customer ',
+  'Sign In' => 'Sign In',
 );

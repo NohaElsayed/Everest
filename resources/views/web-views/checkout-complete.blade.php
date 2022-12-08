@@ -3,7 +3,11 @@
 @section('title',\App\CPU\translate('Order Complete'))
 
 @push('css_or_js')
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
         body {

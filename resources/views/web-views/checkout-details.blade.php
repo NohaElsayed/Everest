@@ -4,7 +4,11 @@
 
 @push('css_or_js')
     <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/checkout-details.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
             background: {{$web_config['primary_color']}};
             border-radius: 6px;

@@ -14,7 +14,12 @@
     <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}">
 
     <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/home.css"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <style>
+        body{
+            font-family: 'Cairo', sans-serif;
+        }
         .media {
             background: white;
         }
@@ -590,158 +595,7 @@
         <!-- Heading-->
 
         <div class="row">
-
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    @php($categories=\App\Model\Category::with(['childes.childes'])->where('position', 0)->priority()->paginate(11))
-                    <ul class="navbar-nav mega-nav pr-2 pl-2 {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}} d-none d-xl-block ">
-                        <!--web-->
-                        <li class="nav-item {{!request()->is('/')?'dropdown':''}}">
-                            <a class="nav-link dropdown-toggle {{Session::get('direction') === "rtl" ? 'pr-0' : 'pl-0'}}"
-                               href="#" data-toggle="dropdown" style="{{request()->is('/')?'pointer-events: none':''}}">
-                                <i class="czi-menu align-middle mt-n1 {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"></i>
-                                <span
-                                    style="margin-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 40px !important;margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 50px">
-                                    {{ \App\CPU\translate('categories')}}
-                                </span>
-                            </a>
-                            @if(request()->is('/'))
-                                <ul class="dropdown-menu" style="right: 0%; display: block!important;
-                                    margin-top: 8px; margin-right: 11px;border: 1px solid #ccccccb3;
-                                    border-bottom-left-radius: 5px;
-                                    border-bottom-right-radius: 5px; box-shadow: none;min-width: 303px !important;{{Session::get('direction') === "rtl" ? 'margin-right: 1px!important;text-align: right;' : 'margin-left: 1px!important;text-align: left;'}}padding-bottom: 0px!important;">
-                                    @foreach($categories as $key=>$category)
-                                        @if($key<8)
-                                            <li class="dropdown">
-                                                <a class="dropdown-item flex-between"
-                                                   <?php if ($category->childes->count() > 0) echo "data-toggle='dropdown'"?> href="javascript:"
-                                                   onclick="location.href='{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}'">
-                                                    <div>
-                                                        <img
-                                                            src="{{asset("storage/app/public/category/$category->icon")}}"
-                                                            onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                            style="width: 18px; height: 18px; ">
-                                                        <span
-                                                            class="{{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category['name']}}</span>
-                                                    </div>
-                                                    @if ($category->childes->count() > 0)
-                                                        <div>
-                                                            <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:#4B5864;"></i>
-                                                        </div>
-                                                    @endif
-                                                </a>
-                                                @if($category->childes->count()>0)
-                                                    <ul class="dropdown-menu"
-                                                        style="right: 100%; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                                        @foreach($category['childes'] as $subCategory)
-                                                            <li class="dropdown">
-                                                                <a class="dropdown-item flex-between"
-                                                                   <?php if ($subCategory->childes->count() > 0) echo "data-toggle='dropdown'"?> href="javascript:"
-                                                                   onclick="location.href='{{route('products',['id'=> $subCategory['id'],'data_from'=>'category','page'=>1])}}'">
-                                                                    <div>
-                                                                        <span
-                                                                            class="{{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$subCategory['name']}}</span>
-                                                                    </div>
-                                                                    @if ($subCategory->childes->count() > 0)
-                                                                        <div>
-                                                                            <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:#4B5864;"></i>
-                                                                        </div>
-                                                                    @endif
-                                                                </a>
-                                                                @if($subCategory->childes->count()>0)
-                                                                    <ul class="dropdown-menu"
-                                                                        style="right: 100%; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                                                        @foreach($subCategory['childes'] as $subSubCategory)
-                                                                            <li>
-                                                                                <a class="dropdown-item"
-                                                                                   href="{{route('products',['id'=> $subSubCategory['id'],'data_from'=>'category','page'=>1])}}">{{$subSubCategory['name']}}</a>
-                                                                            </li>
-                                                                        @endforeach
-                                                                    </ul>
-                                                                @endif
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                    <a class="dropdown-item text-capitalize" href="{{route('categories')}}"
-                                       style="color: {{$web_config['primary_color']}} !important;{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 29%">
-                                        {{\App\CPU\translate('view_more')}}
-
-                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:#4B5864;"></i>
-                                    </a>
-
-                                </ul>
-                            @else
-                                <ul class="dropdown-menu"
-                                    style="right: 0; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                    @foreach($categories as $category)
-                                        <li class="dropdown">
-                                            <a class="dropdown-item flex-between <?php if ($category->childes->count() > 0) echo "data-toggle='dropdown"?> "
-                                               <?php if ($category->childes->count() > 0) echo "data-toggle='dropdown'"?> href="javascript:"
-                                               onclick="location.href='{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}'">
-                                                <div>
-                                                    <img src="{{asset("storage/app/public/category/$category->icon")}}"
-                                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                         style="width: 18px; height: 18px; ">
-                                                    <span
-                                                        class="{{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$category['name']}}</span>
-                                                </div>
-                                                @if ($category->childes->count() > 0)
-                                                    <div>
-                                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:#4B5864;"></i>
-                                                    </div>
-                                                @endif
-                                            </a>
-                                            @if($category->childes->count()>0)
-                                                <ul class="dropdown-menu"
-                                                    style="right: 100%; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                                    @foreach($category['childes'] as $subCategory)
-                                                        <li class="dropdown">
-                                                            <a class="dropdown-item flex-between <?php if ($subCategory->childes->count() > 0) echo "data-toggle='dropdown"?> "
-                                                               <?php if ($subCategory->childes->count() > 0) echo "data-toggle='dropdown'"?> href="javascript:"
-                                                               onclick="location.href='{{route('products',['id'=> $subCategory['id'],'data_from'=>'category','page'=>1])}}'">
-                                                                <div>
-                                                                    <span
-                                                                        class="{{Session::get('direction') === "rtl" ? 'pr-3' : 'pl-3'}}">{{$subCategory['name']}}</span>
-                                                                </div>
-                                                                @if ($subCategory->childes->count() > 0)
-                                                                    <div>
-                                                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:#4B5864;"></i>
-                                                                    </div>
-                                                                @endif
-                                                            </a>
-                                                            @if($subCategory->childes->count()>0)
-                                                                <ul class="dropdown-menu"
-                                                                    style="right: 100%; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                                                                    @foreach($subCategory['childes'] as $subSubCategory)
-                                                                        <li>
-                                                                            <a class="dropdown-item"
-                                                                               href="{{route('products',['id'=> $subSubCategory['id'],'data_from'=>'category','page'=>1])}}">{{$subSubCategory['name']}}</a>
-                                                                        </li>
-                                                                    @endforeach
-                                                                </ul>
-                                                            @endif
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </li>
-                                    @endforeach
-                                    <a class="dropdown-item" href="{{route('categories')}}"
-                                       style="color: {{$web_config['primary_color']}} !important;{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 29%">
-                                        {{\App\CPU\translate('view_more')}}
-
-                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}" style="font-size: 8px !important;background:none !important;color:{{$web_config['primary_color']}} !important;"></i>
-                                    </a>
-                                </ul>
-                            @endif
-                        </li>
-                    </ul>
-
-                </div>
-                <div class="col-lg-9 col-md-9 col-sm-12" style="{{Session::get('direction') === "ltr" ? 'direction:rtl' :'direction:ltr'}}">
+                <div class="col-lg-12 col-md-12 col-sm-12" style="{{Session::get('direction') === "ltr" ? 'direction:rtl' :'direction:ltr'}}">
 
                         <div class="swiper">
                             <!-- Additional required wrapper -->
@@ -779,7 +633,7 @@
             <!-- Slider main container -->
         </div>
     </section>
-    <section>
+    <section style="margin-top: 50px">
         <div class="container">
             {{--            <div class="row">--}}
             <div style="display: flex; justify-content: space-between;">
@@ -878,127 +732,8 @@
     {{--deal of the day--}}
     <div class="container rtl">
         <div class="row">
-            {{-- Deal of the day/Recommended Product --}}
-            <div class="col-xl-3 col-md-4 pb-4 mt-3 pl-0 pr-0">
-                <div class="deal_of_the_day" style="background: {{$web_config['primary_color']}};height: 784px;">
-                    @if(isset($deal_of_the_day) && isset($deal_of_the_day->product))
-                        <div class="d-flex justify-content-center align-items-center" style="width: 70%;margin:auto;">
-                            <h1 class="align-items-center" style="color: white"> {{ \App\CPU\translate('deal_of_the_day') }}</h1>
-                        </div>
-                        <div class="recomanded-product-card">
-
-                            <div class="d-flex justify-content-center align-items-center" style="margin:20px 20px -20px 20px;padding-top: 20px;">
-                                <img style="border-radius:5px 5px 0px opx;"
-                                     src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$deal_of_the_day->product['thumbnail']}}"
-                                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                     alt="">
-                            </div>
-                            <div style="background:#ffffff;margin:20px;padding-top: 10px;height: 200px;border-radius: 0px 0px 5px 5px;">
-                                <div style="text-align: left; padding: 20px;">
-
-                                    @php($overallRating = \App\CPU\ProductManager::get_overall_rating($deal_of_the_day->product['reviews']))
-                                    <div class="rating-show" style="height:125px; ">
-                                        <h5 style="font-weight: 600; color: {{$web_config['primary_color']}}">
-                                            {{\Illuminate\Support\Str::limit($deal_of_the_day->product['name'],30)}}
-                                        </h5>
-                                        <span class="d-inline-block font-size-sm text-body">
-                                            @for($inc=0;$inc<5;$inc++)
-                                                @if($inc<$overallRating[0])
-                                                    <i class="sr-star czi-star-filled active"></i>
-                                                @else
-                                                    <i class="sr-star czi-star" style="color:#fea569 !important"></i>
-                                                @endif
-                                            @endfor
-                                            <label class="badge-style">( {{$deal_of_the_day->product->reviews_count}} )</label>
-                                        </span>
-                                    </div>
-                                    <div class="float-right">
-
-                                        @if($deal_of_the_day->product->discount > 0)
-                                            <strike style="font-size: 12px!important;color: #E96A6A!important;">
-                                                {{\App\CPU\Helpers::currency_converter&nbsp &nbsp ($deal_of_the_day->product->unit_price)}}
-                                            </strike>
-                                        @endif
-                                        <span class="text-accent" style="margin: 10px;font-size: 22px !important;">
-                                            {{\App\CPU\Helpers::currency_converter(
-                                                $deal_of_the_day->product->unit_price-(\App\CPU\Helpers::get_product_discount($deal_of_the_day->product,$deal_of_the_day->product->unit_price))
-                                            )}}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="recomanded-buy-button">
-                            <button class="buy_btn" style="color:{{$web_config['primary_color']}}"
-                                    onclick="location.href='{{route('product',$deal_of_the_day->product->slug)}}'">{{\App\CPU\translate('buy_now')}}
-                            </button>
-                        </div>
-                    @else
-                        @php($product=\App\Model\Product::active()->inRandomOrder()->first())
-                        @if(isset($product))
-                            <div class="d-flex justify-content-center align-items-center">
-                                <h1 style="color: white"> {{ \App\CPU\translate('recommended_product') }}</h1>
-                            </div>
-                            <div class="recomanded-product-card">
-
-                                <div class="d-flex justify-content-center align-items-center" style="margin:20px 20px -20px 20px;padding-top: 20px;">
-                                    <img style=""
-                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                         alt="">
-                                </div>
-                                <div style="background:#ffffff;margin:20px;padding-top: 10px;height: 200px;border-radius: 0px 0px 5px 5px;">
-                                    <div style="text-align: left; padding: 20px;">
-
-                                        @php($overallRating = \App\CPU\ProductManager::get_overall_rating($product['reviews']))
-                                        <div class="rating-show" style="height:125px; ">
-                                            <h5 style="font-weight: 600; color: {{$web_config['primary_color']}}">
-                                                {{\Illuminate\Support\Str::limit($product['name'],40)}}
-                                            </h5>
-                                            <span class="d-inline-block font-size-sm text-body">
-                                                @for($inc=0;$inc<5;$inc++)
-                                                    @if($inc<$overallRating[0])
-                                                        <i class="sr-star czi-star-filled active"></i>
-                                                    @else
-                                                        <i class="sr-star czi-star" style="color:#fea569 !important"></i>
-                                                    @endif
-                                                @endfor
-                                                <label class="badge-style">( {{$product->reviews_count}} )</label>
-                                            </span>
-                                        </div>
-                                        <div class="float-right">
-
-                                            @if($product->discount > 0)
-                                                <strike style="font-size: 12px!important;color: #E96A6A!important;">
-                                                    {{\App\CPU\Helpers::currency_converter($product->unit_price)}}
-                                                </strike>
-                                            @endif
-                                            <span class="text-accent" style="margin: 10px;font-size: 22px !important;">
-                                                {{\App\CPU\Helpers::currency_converter(
-                                                    $product->unit_price-(\App\CPU\Helpers::get_product_discount($product,$product->unit_price))
-                                                )}}
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="recomanded-buy-button">
-                                <button class="buy_btn" style="color:{{$web_config['primary_color']}}"
-                                        onclick="location.href='{{route('product',$product->slug)}}'">{{\App\CPU\translate('buy_now')}}
-                                </button>
-                            </div>
-
-                        @endif
-                    @endif
-                </div>
-
-            </div>
             {{-- Latest products --}}
-            <div class="col-xl-9 col-md-8 mt-2 pl-0 pr-0">
+            <div class="col-xl-12 col-md-8 mt-2 pl-0 pr-0">
                 <div class="latest-product-margin" style="margin-{{Session::get('direction') === "rtl" ? 'right:30px' : 'left:30px'}}">
                     <div class="d-flex justify-content-between">
                         <div class="" style="text-align: center;">
@@ -1046,124 +781,7 @@
 
     @php($business_mode=\App\CPU\Helpers::get_business_settings('business_mode'))
     {{--categries--}}
-    <div class="container rtl">
-        {{-- <div class="row"> --}}
-            {{-- @if ($business_mode == 'multi')
-                <div class="col-md-6 {{Session::get('direction') === "rtl" ? 'pr-0' : 'pl-0'}}">
-                    <div class="card" style="min-height: 380px;">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-between">
-                                <div class="categories-title">
-                                    <span style="font-weight: 600;font-size: 16px;">{{ \App\CPU\translate('categories')}}</span>
-                                </div>
-                                <div class="categories-view-all">
-                                    <a class="text-capitalize view-all-text"
-                                       href="{{route('categories')}}">{{ \App\CPU\translate('view_all')}}
-                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left-circle mr-1 ml-n1 mt-1 float-left' : 'right-circle ml-1 mr-n1'}}"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row d-flex justify-content-center mt-3">
-                                @foreach($categories as $key=>$category)
 
-                                    @if ($key<10)
-                                        <div class="text-center"  style="margin: 5px;">
-                                            <a href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">
-                                                <img style="vertical-align: middle; height: 100px;border-radius: 5px;"
-                                                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                     src="{{asset("storage/app/public/category/$category->icon")}}"
-                                                     alt="{{$category->name}}">
-                                                <p class="text-center small "
-                                                   style="margin-top: 5px">{{Str::limit($category->name, 12)}}</p>
-                                            </a>
-                                        </div>
-                                    @endif
-
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="col-md-12 pl-0 pr-0">
-                    <div class="card" style="min-height: 232px;">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-between">
-                                <div style="{{Session::get('direction') === "rtl" ? 'margin-right: 20px;' : 'margin-left: 22px;'}}">
-                                    <span style="font-weight: 600;font-size: 16px;">{{ \App\CPU\translate('categories')}}</span>
-                                </div>
-                                <div style="{{Session::get('direction') === "rtl" ? 'margin-left: 15px;' : 'margin-right: 13px;'}}">
-                                    <a class="text-capitalize view-all-text"
-                                       href="{{route('categories')}}">{{ \App\CPU\translate('view_all')}}
-                                        <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left-circle mr-1 ml-n1 mt-1 float-left' : 'right-circle ml-1 mr-n1'}}"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row d-flex justify-content-center mt-3">
-                                @foreach($categories as $key=>$category)
-                                    @if ($key<11)
-                                        <div class="text-center"  style="margin: 5px;">
-                                            <a href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">
-                                                <img style="vertical-align: middle; height: 100px;border-radius: 5px;"
-                                                     onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                     src="{{asset("storage/app/public/category/$category->icon")}}"
-                                                     alt="{{$category->name}}">
-                                                <p class="text-center small "
-                                                   style="margin-top: 5px">{{Str::limit($category->name, 12)}}</p>
-                                            </a>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif --}}
-        <!-- top sellers -->
-
-            {{-- @if ($business_mode == 'multi')
-                @if(count($top_sellers) > 0)
-                    <div class="col-md-6 mt-2 mt-md-0 seller-card" >
-                        <div class="card" style="min-height: 383px;">
-                            <div class="card-body">
-                                <div class="row d-flex justify-content-between">
-                                    <div class="seller-list-title">
-                                        <span style="font-weight: 600;font-size: 18px;">{{ \App\CPU\translate('sellers')}}</span>
-                                    </div>
-                                    <div class="seller-list-view-all">
-                                        <a class="text-capitalize view-all-text"
-                                           href="{{route('sellers')}}">{{ \App\CPU\translate('view_all')}}
-                                            <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left-circle mr-1 ml-n1 mt-1 float-left' : 'right-circle ml-1 mr-n1'}}"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row d-flex justify-content-between mt-3">
-                                    @foreach($top_sellers as $key=>$seller)
-                                        @if ($key<10)
-
-                                            @if($seller->shop)
-                                                <div style="margin: 5px;">
-                                                    <center>
-                                                        <a href="{{route('shopView',['id'=>$seller['id']])}}">
-                                                            <img
-                                                                style="vertical-align: middle; padding: 2%;width:100px;height: 100px;border-radius: 50%"
-                                                                onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                                src="{{asset("storage/app/public/shop")}}/{{$seller->shop->image}}">
-                                                            <p class="text-center small ">{{Str::limit($seller->shop->name, 14)}}</p>
-                                                        </a>
-                                                    </center>
-                                                </div>
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            @endif --}}
-        {{-- </div> --}}
-    </div>
 
 
     <div class="container rtl mt-3">
