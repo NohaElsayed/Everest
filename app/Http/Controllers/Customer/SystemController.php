@@ -182,7 +182,8 @@ class SystemController extends Controller
         $defultadress = json_decode(BusinessSetting::firstWhere('type','default_location')->value);
         foreach ($carts as $cart){
             if ($cart->product->added_by == 'admin'){
-                $shipping_cat = ShippingCat::find($cart->product->shipping_category_id);
+                $shipping_cat = ShippingCat::find($cart->product->shipping_cat_id);
+                //return response()->json($cart->product, 500);
                 if ($shipping_cat->type == 1){
                     $shipping_cost += $shipping_cat->amount * $this->getDistance($address_id,$defultadress->lat,$defultadress->lng);
                 }else{
