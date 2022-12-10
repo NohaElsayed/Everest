@@ -90,7 +90,6 @@
                          {{-- @if ($user->roles_name == 'seller') --}}
                             <div class="form-group">
                                 <label class="form-label" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">{{ \App\CPU\translate('Role User') }}</label>
-                                {{-- @if ($roles!= "seller") --}}
                                 {!! Form::select('roles_name[]', $roles,[], array('class' => 'form-control','multiple')) !!}
                             </div>
                             {{-- @endif --}}

@@ -159,6 +159,7 @@ class ProductController extends Controller
         }
 
         $product->category_ids = json_encode($category);
+        $product->shipping_category_id = $request->shipping_category_id;
         $product->brand_id = $request->brand_id;
         $product->unit = $request->unit;
         $product->code = $request->code;
@@ -292,7 +293,7 @@ class ProductController extends Controller
 
     function list(Request $request)
     {
-        
+
         $query_param = [];
         $search = $request['search'];
         if ($request->has('search')) {
@@ -457,6 +458,7 @@ class ProductController extends Controller
         $product_category = json_decode($product->category_ids);
         $product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
+
         $br = Brand::orderBY('name', 'ASC')->get();
         return view('seller-views.product.edit', compact('categories', 'br', 'product', 'product_category'));
 
@@ -531,6 +533,7 @@ class ProductController extends Controller
             ]);
         }
         $product->category_ids = json_encode($category);
+        $product->shipping_category_id = $request->shipping_category_id;
         $product->brand_id = $request->brand_id;
         $product->unit = $request->unit;
         $product->details = $request->description[array_search('en', $request->lang)];
@@ -748,7 +751,8 @@ class ProductController extends Controller
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
                 'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
-                'brand_id' => $collection['brand_id'],
+                'shipping_category_id' => $collection['shipping_category_id'],
+            'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
                 'refundable' => $collection['refundable'],
@@ -801,7 +805,8 @@ class ProductController extends Controller
                 'category_id' => $category_id,
                 'sub_category_id' => $sub_category_id,
                 'sub_sub_category_id' => $sub_sub_category_id,
-                'brand_id' => $item->brand_id,
+               'shipping_category_id '=  $item->shipping_category_id,
+            'brand_id' => $item->brand_id,
                 'unit' => $item->unit,
                 'min_qty' => $item->min_qty,
                 'refundable' => $item->refundable,

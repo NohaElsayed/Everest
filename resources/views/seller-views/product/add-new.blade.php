@@ -108,6 +108,21 @@
                                         </select>
                                           @error('sub_sub_category_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
                                     </div>
+                                    <div class="col-md-4">
+                                        <label for="name">{{ \App\CPU\translate('Shipping Category') }}</label>
+                                        <select class="js-example-basic-multiple form-control" name="shipping_category_id"
+                                                required>
+                                            <option value="{{ old('shipping_category_id') }}" selected disabled>---Select---
+                                            </option>
+                                            @foreach ($shipping_cats as $shipping_cat)
+                                                <option value="{{ $shipping_cat['id'] }}"
+                                                    {{ old('title') == $shipping_cat['id'] ? 'selected' : '' }}>
+                                                    {{ $shipping_cat['title'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
 

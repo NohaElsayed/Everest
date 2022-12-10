@@ -394,6 +394,18 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('shipping-store','ShippingMethodController@shippingStore')->name('shipping-store');
             });
 
+            Route::group(['prefix' => 'shipping-cats', 'as' => 'shipping-cats.','middleware'=>['module:business_settings']], function () {
+                Route::get('/', 'ShippingCatController@index_admin')->name('index');
+                //Route::get('by/seller', 'ShippingMethodController@index_seller')->name('by.seller');
+                Route::post('add', 'ShippingCatController@store')->name('add');
+                Route::get('edit/{id}', 'ShippingCatController@edit')->name('edit');
+                Route::put('update/{id}', 'ShippingCatController@update')->name('update');
+                Route::post('delete', 'ShippingCatController@delete')->name('delete');
+//                Route::post('status-update', 'ShippingMethodController@status_update')->name('status-update');
+//                Route::get('setting', 'ShippingMethodController@setting')->name('setting');
+//                Route::post('shipping-store','ShippingMethodController@shippingStore')->name('shipping-store');
+            });
+
             Route::group(['prefix' => 'shipping-type', 'as' => 'shipping-type.','middleware'=>['module:business_settings']], function () {
                 Route::post('store', 'ShippingTypeController@store')->name('store');
             });

@@ -13,6 +13,7 @@ use App\Model\DealOfTheDay;
 use App\Model\FlashDealProduct;
 use App\Model\Product;
 use App\Model\Review;
+use App\Model\ShippingCat;
 use App\Model\Translation;
 use App\Model\Wishlist;
 use Brian2694\Toastr\Facades\Toastr;
@@ -29,8 +30,9 @@ class ProductController extends BaseController
     public function add_new()
     {
         $cat = Category::where(['parent_id' => 0])->get();
+        $shipping_cats = ShippingCat::get();
         $br = Brand::orderBY('name', 'ASC')->get();
-        return view('admin-views.product.add-new', compact('cat', 'br'));
+        return view('admin-views.product.add-new', compact('cat', 'shipping_cats','br'));
     }
 
     public function featured_status(Request $request)
@@ -72,19 +74,20 @@ class ProductController extends BaseController
     {
       //  return $request;
         $validator = Validator::make($request->all(), [
-            'name'              => 'required',
-            'category_id'       => 'required',
-            'brand_id'          => 'required',
-            'unit'              => 'required',
-            'images'            => 'required',
-            'image'             => 'required',
-            'tax'               => 'required|min:0',
-            'unit_price'        => 'required|numeric|min:1',
-            'purchase_price'    => 'required|numeric|min:1',
-            'discount'          => 'required|gt:-1',
-            'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|numeric|min:1|digits_between:6,20|unique:products',
-            'minimum_order_qty' => 'required|numeric|min:1',
+            'name'                => 'required',
+            'category_id'         => 'required',
+            'shipping_category_id'=> 'required',
+            'brand_id'            => 'required',
+            'unit'                => 'required',
+            'images'              => 'required',
+            'image'               => 'required',
+            'tax'                 => 'required|min:0',
+            'unit_price'          => 'required|numeric|min:1',
+            'purchase_price'      => 'required|numeric|min:1',
+            'discount'            => 'required|gt:-1',
+            'shipping_cost'       => 'required|gt:-1',
+            'code'                => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'minimum_order_qty'   => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
             'image.required'        => 'Product thumbnail is required!',
@@ -157,6 +160,7 @@ class ProductController extends BaseController
         }
 
         $p->category_ids = json_encode($category);
+        $p->shipping_category_id = $request->shipping_category_id;
         $p->brand_id = $request->brand_id;
         $p->unit = $request->unit;
         $p->details = $request->description[array_search('en', $request->lang)];
@@ -586,6 +590,7 @@ class ProductController extends BaseController
             ]);
         }
         $product->category_ids = json_encode($category);
+        $product->shipping_category_id = $request->shipping_category_id;
         $product->brand_id = $request->brand_id;
         $product->unit = $request->unit;
         $product->code = $request->code;
@@ -805,6 +810,7 @@ class ProductController extends BaseController
                 'name' => $collection['name'],
                 'slug' => Str::slug($collection['name'], '-') . '-' . Str::random(6),
                 'category_ids' => json_encode([['id' => (string)$collection['category_id'], 'position' => 1], ['id' => (string)$collection['sub_category_id'], 'position' => 2], ['id' => (string)$collection['sub_sub_category_id'], 'position' => 3]]),
+                'shipping_category_id' => $collection['shipping_category_id'],
                 'brand_id' => $collection['brand_id'],
                 'unit' => $collection['unit'],
                 'min_qty' => $collection['min_qty'],
@@ -859,6 +865,7 @@ class ProductController extends BaseController
                 'category_id' => $category_id,
                 'sub_category_id' => $sub_category_id,
                 'sub_sub_category_id' => $sub_sub_category_id,
+                'shipping_category_id' => $item->shipping_category_id,
                 'brand_id' => $item->brand_id,
                 'unit' => $item->unit,
                 'min_qty' => $item->min_qty,

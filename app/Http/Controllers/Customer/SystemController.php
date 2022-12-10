@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Customer;
 use App\CPU\CartManager;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
+use App\Model\BusinessSetting;
+use App\Model\Cart;
 use App\Model\CartShipping;
+use App\Model\ShippingCat;
 use App\Model\ShippingMethod;
+use App\Traits\shippingCostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class SystemController extends Controller
 {
+    use shippingCostTrait;
     public function set_payment_method($name)
     {
         if (auth('customer')->check() || session()->has('mobile_app_payment_customer_id')) {
@@ -52,6 +57,9 @@ class SystemController extends Controller
         $shipping['shipping_method_id'] = $request['id'];
         $shipping['shipping_cost'] = ShippingMethod::find($request['id'])->cost;
         $shipping->save();
+        session()->put('cart_group_id', $request['cart_group_id']);
+        session()->put('shipping_cost_id', $shipping->id);
+        session()->put('shipping_method_cost', ShippingMethod::find($request['id'])->cost);
     }
 
     public function choose_shipping_address(Request $request)
@@ -169,6 +177,34 @@ class SystemController extends Controller
         session()->put('address_id', $address_id);
         session()->put('billing_address_id', $billing_address_id);
 
+        $shipping_cost =0;
+        $carts = Cart::with('product')->Where('cart_group_id' , session()->get('cart_group_id'))->get();
+        $defultadress = json_decode(BusinessSetting::firstWhere('type','default_location')->value);
+        foreach ($carts as $cart){
+            if ($cart->product->added_by == 'admin'){
+                $shipping_cat = ShippingCat::find($cart->product->shipping_category_id);
+                if ($shipping_cat->type == 1){
+                    $shipping_cost += $shipping_cat->amount * $this->getDistance($address_id,$defultadress->lat,$defultadress->lng);
+                }else{
+                    $shipping_cost += ($shipping_cat->amount * $cart->price * $this->getDistance($address_id,$defultadress->lat,$defultadress->lng))/100 ;
+                }
+            }else{
+                if ($shipping_cat->type == 1){
+                    $shipping_cost += $shipping_cat->amount * $this->getDistance($address_id,$cart->product->shop->latitude,$cart->product->shop->longitude);
+                }else{
+                    $shipping_cost += ($shipping_cat->amount * $cart->price * $this->getDistance($address_id,$cart->product->shop->latitude,$cart->product->shop->longitude))/100 ;
+                }
+                $shipping_cost += session()->get('shipping_method_cost') * $this->getDistance($address_id,$cart->product->shop->latitude,$cart->product->shop->longitude);
+            }
+        }
+        $shipping = CartShipping::where('cart_group_id' , session()->get('cart_group_id'))->first();
+        if (isset($shipping) == false) {
+            $shipping = new CartShipping();
+        }
+        $shipping['cart_group_id'] = session()->get('cart_group_id');
+        $shipping['shipping_method_id'] = session()->get('shipping_cost_id');
+        $shipping['shipping_cost'] = $shipping_cost;
+        $shipping->save();
         return response()->json([], 200);
     }
 

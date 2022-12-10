@@ -156,6 +156,50 @@
                                                            placeholder="{{\App\CPU\translate('search_here')}}"/>
                                                     <div style="height: 200px;" id="location_map_canvas"></div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-12">
+                                                        <div class="form-group">
+                                                            <label class="input-label" for="choice_zones">{{ __('messages.zone') }}<span
+                                                                    class="input-label-secondary"
+                                                                    title="{{ __('select_zone_for_map') }}"></span></label>
+                                                            <select name="zone_id" id="choice_zones" required class="form-control js-select2-custom"
+                                                                    data-placeholder="{{ __('messages.select') }} {{ __('messages.zone') }}">
+                                                                <option value="" selected disabled>{{ __('messages.select') }}
+                                                                    {{ __('messages.zone') }}</option>
+                                                                @foreach (\App\Model\Zone::all() as $zone)
+                                                                    @if (isset(auth('admin')->user()->zone_id))
+                                                                        @if (auth('admin')->user()->zone_id == $zone->id)
+                                                                            <option value="{{ $zone->id }}" selected>{{ $zone->name }}
+                                                                            </option>
+                                                                        @endif
+                                                                    @else
+                                                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-12">
+                                                        <div class="form-group">
+                                                            <label class="input-label" for="latitude">{{ __('messages.latitude') }}<span
+                                                                    class="input-label-secondary"
+                                                                    title="}"></span></label>
+                                                            <input type="text" id="latitude" name="latitude" class="form-control"
+                                                                   placeholder="Ex : -94.22213" value="{{ old('latitude') }}" required readonly>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="col-md-4 col-12">
+                                                        <div class="form-group">
+                                                            <label class="input-label" for="longitude">{{ __('messages.longitude') }}<span
+                                                                    class="input-label-secondary"
+                                                                    title="{{ __('messages.restaurant_lat_lng_warning') }}"></span></label>
+                                                            <input type="text" name="longitude" class="form-control" placeholder="Ex : 103.344322"
+                                                                   id="longitude" value="{{ old('longitude') }}" required readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                  <div class="form-check" style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 1.25rem;">
                                                     <input type="checkbox" name="save_address" class="form-check-input"
                                                            id="exampleCheck1">
@@ -163,16 +207,7 @@
                                                         {{ \App\CPU\translate('save_this_address')}}
                                                     </label>
                                                 </div>
-                                                <input type="hidden" id="latitude"
-                                                       name="latitude" class="form-control d-inline"
-                                                       placeholder="Ex : -94.22213"
-                                                       value="{{$default_location?$default_location['lat']:0}}" required
-                                                       readonly>
-                                                <input type="hidden"
-                                                       name="longitude" class="form-control"
-                                                       placeholder="Ex : 103.344322" id="longitude"
-                                                       value="{{$default_location?$default_location['lng']:0}}" required
-                                                       readonly>
+
 
                                                 <button type="submit" class="btn btn-primary" style="display: none"
                                                         id="address_submit"></button>
@@ -380,113 +415,114 @@
             }
         }
     </script>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.49"></script>
-    <script>
-        function initAutocomplete() {
-            var myLatLng = {
-                lat: {{$default_location?$default_location['lat']:'-33.8688'}},
-                lng: {{$default_location?$default_location['lng']:'151.2195'}}
-            };
+{{--    <script--}}
+{{--        src="https://maps.googleapis.com/maps/api/js?key={{\App\CPU\Helpers::get_business_settings('map_api_key')}}&libraries=places&v=3.49"></script>--}}
+{{--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfnUAEQtTSJ1ca2GZKF0_MPc16K6MixlI&libraries=drawing,places&v=3.45.8"></script>--}}
+{{--    <script>--}}
+{{--        function initAutocomplete() {--}}
+{{--            var myLatLng = {--}}
+{{--                lat: {{$default_location?$default_location['lat']:'-33.8688'}},--}}
+{{--                lng: {{$default_location?$default_location['lng']:'151.2195'}}--}}
+{{--            };--}}
 
-            const map = new google.maps.Map(document.getElementById("location_map_canvas"), {
-                center: {
-                    lat: {{$default_location?$default_location['lat']:'-33.8688'}},
-                    lng: {{$default_location?$default_location['lng']:'151.2195'}}
-                },
-                zoom: 13,
-                mapTypeId: "roadmap",
-            });
+{{--            const map = new google.maps.Map(document.getElementById("location_map_canvas"), {--}}
+{{--                center: {--}}
+{{--                    lat: {{$default_location?$default_location['lat']:'-33.8688'}},--}}
+{{--                    lng: {{$default_location?$default_location['lng']:'151.2195'}}--}}
+{{--                },--}}
+{{--                zoom: 13,--}}
+{{--                mapTypeId: "roadmap",--}}
+{{--            });--}}
 
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-            });
+{{--            var marker = new google.maps.Marker({--}}
+{{--                position: myLatLng,--}}
+{{--                map: map,--}}
+{{--            });--}}
 
-            marker.setMap(map);
-            var geocoder = geocoder = new google.maps.Geocoder();
-            google.maps.event.addListener(map, 'click', function (mapsMouseEvent) {
-                var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                var coordinates = JSON.parse(coordinates);
-                var latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
-                marker.setPosition(latlng);
-                map.panTo(latlng);
+{{--            marker.setMap(map);--}}
+{{--            var geocoder = geocoder = new google.maps.Geocoder();--}}
+{{--            google.maps.event.addListener(map, 'click', function (mapsMouseEvent) {--}}
+{{--                var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);--}}
+{{--                var coordinates = JSON.parse(coordinates);--}}
+{{--                var latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);--}}
+{{--                marker.setPosition(latlng);--}}
+{{--                map.panTo(latlng);--}}
 
-                document.getElementById('latitude').value = coordinates['lat'];
-                document.getElementById('longitude').value = coordinates['lng'];
+{{--                document.getElementById('latitude').value = coordinates['lat'];--}}
+{{--                document.getElementById('longitude').value = coordinates['lng'];--}}
 
-                geocoder.geocode({'latLng': latlng}, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        if (results[1]) {
-                            document.getElementById('address').value = results[1].formatted_address;
-                            console.log(results[1].formatted_address);
-                        }
-                    }
-                });
-            });
+{{--                geocoder.geocode({'latLng': latlng}, function (results, status) {--}}
+{{--                    if (status == google.maps.GeocoderStatus.OK) {--}}
+{{--                        if (results[1]) {--}}
+{{--                            document.getElementById('address').value = results[1].formatted_address;--}}
+{{--                            console.log(results[1].formatted_address);--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
 
-            // Create the search box and link it to the UI element.
-            const input = document.getElementById("pac-input");
-            const searchBox = new google.maps.places.SearchBox(input);
-            map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-            // Bias the SearchBox results towards current map's viewport.
-            map.addListener("bounds_changed", () => {
-                searchBox.setBounds(map.getBounds());
-            });
-            let markers = [];
-            // Listen for the event fired when the user selects a prediction and retrieve
-            // more details for that place.
-            searchBox.addListener("places_changed", () => {
-                const places = searchBox.getPlaces();
+{{--            // Create the search box and link it to the UI element.--}}
+{{--            const input = document.getElementById("pac-input");--}}
+{{--            const searchBox = new google.maps.places.SearchBox(input);--}}
+{{--            map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);--}}
+{{--            // Bias the SearchBox results towards current map's viewport.--}}
+{{--            map.addListener("bounds_changed", () => {--}}
+{{--                searchBox.setBounds(map.getBounds());--}}
+{{--            });--}}
+{{--            let markers = [];--}}
+{{--            // Listen for the event fired when the user selects a prediction and retrieve--}}
+{{--            // more details for that place.--}}
+{{--            searchBox.addListener("places_changed", () => {--}}
+{{--                const places = searchBox.getPlaces();--}}
 
-                if (places.length == 0) {
-                    return;
-                }
-                // Clear out the old markers.
-                markers.forEach((marker) => {
-                    marker.setMap(null);
-                });
-                markers = [];
-                // For each place, get the icon, name and location.
-                const bounds = new google.maps.LatLngBounds();
-                places.forEach((place) => {
-                    if (!place.geometry || !place.geometry.location) {
-                        console.log("Returned place contains no geometry");
-                        return;
-                    }
-                    var mrkr = new google.maps.Marker({
-                        map,
-                        title: place.name,
-                        position: place.geometry.location,
-                    });
+{{--                if (places.length == 0) {--}}
+{{--                    return;--}}
+{{--                }--}}
+{{--                // Clear out the old markers.--}}
+{{--                markers.forEach((marker) => {--}}
+{{--                    marker.setMap(null);--}}
+{{--                });--}}
+{{--                markers = [];--}}
+{{--                // For each place, get the icon, name and location.--}}
+{{--                const bounds = new google.maps.LatLngBounds();--}}
+{{--                places.forEach((place) => {--}}
+{{--                    if (!place.geometry || !place.geometry.location) {--}}
+{{--                        console.log("Returned place contains no geometry");--}}
+{{--                        return;--}}
+{{--                    }--}}
+{{--                    var mrkr = new google.maps.Marker({--}}
+{{--                        map,--}}
+{{--                        title: place.name,--}}
+{{--                        position: place.geometry.location,--}}
+{{--                    });--}}
 
-                    google.maps.event.addListener(mrkr, "click", function (event) {
-                        document.getElementById('latitude').value = this.position.lat();
-                        document.getElementById('longitude').value = this.position.lng();
+{{--                    google.maps.event.addListener(mrkr, "click", function (event) {--}}
+{{--                        document.getElementById('latitude').value = this.position.lat();--}}
+{{--                        document.getElementById('longitude').value = this.position.lng();--}}
 
-                    });
+{{--                    });--}}
 
-                    markers.push(mrkr);
+{{--                    markers.push(mrkr);--}}
 
-                    if (place.geometry.viewport) {
-                        // Only geocodes have viewport.
-                        bounds.union(place.geometry.viewport);
-                    } else {
-                        bounds.extend(place.geometry.location);
-                    }
-                });
-                map.fitBounds(bounds);
-            });
-        };
-        $(document).on('ready', function () {
-            initAutocomplete();
+{{--                    if (place.geometry.viewport) {--}}
+{{--                        // Only geocodes have viewport.--}}
+{{--                        bounds.union(place.geometry.viewport);--}}
+{{--                    } else {--}}
+{{--                        bounds.extend(place.geometry.location);--}}
+{{--                    }--}}
+{{--                });--}}
+{{--                map.fitBounds(bounds);--}}
+{{--            });--}}
+{{--        };--}}
+{{--        $(document).on('ready', function () {--}}
+{{--            initAutocomplete();--}}
 
-        });
+{{--        });--}}
 
-        $(document).on("keydown", "input", function (e) {
-            if (e.which == 13) e.preventDefault();
-        });
-    </script>
+{{--        $(document).on("keydown", "input", function (e) {--}}
+{{--            if (e.which == 13) e.preventDefault();--}}
+{{--        });--}}
+{{--    </script>--}}
 
     <script>
         function initAutocompleteBilling() {
@@ -669,5 +705,157 @@
 
 
         }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfnUAEQtTSJ1ca2GZKF0_MPc16K6MixlI&libraries=drawing,places&v=3.45.8"></script>
+    <script>
+        @php($default_location = "maps/api/js?key=AIzaSyDfnUAEQtTSJ1ca2GZKF0_MPc16K6MixlI")
+        @php($default_location = $default_location? json_decode($default_location, true) : 0)
+        let myLatlng = {
+            lat: {{ $default_location ? $default_location['lat'] : '23.757989' }},
+            lng: {{ $default_location ? $default_location['lng'] : '90.360587' }}
+        };
+        let map = new google.maps.Map(document.getElementById("location_map_canvas"), {
+            zoom: 13,
+            center: myLatlng,
+        });
+        var zonePolygon = null;
+        let infoWindow = new google.maps.InfoWindow({
+            content: "Click the map to get Lat/Lng!",
+            position: myLatlng,
+        });
+        var bounds = new google.maps.LatLngBounds();
+
+        function initMap() {
+            // Create the initial InfoWindow.
+            infoWindow.open(map);
+            //get current location block
+            infoWindow = new google.maps.InfoWindow();
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        myLatlng = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        infoWindow.setPosition(myLatlng);
+                        infoWindow.setContent("Location found.");
+                        infoWindow.open(map);
+                        map.setCenter(myLatlng);
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+            //-----end block------
+            // Create the search box and link it to the UI element.
+            const input = document.getElementById("pac-input");
+            const searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+            let markers = [];
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+                // Clear out the old markers.
+                markers.forEach((marker) => {
+                    marker.setMap(null);
+                });
+                markers = [];
+                // For each place, get the icon, name and location.
+                const bounds = new google.maps.LatLngBounds();
+                places.forEach((place) => {
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    const icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25),
+                    };
+                    // Create a marker for each place.
+                    markers.push(
+                        new google.maps.Marker({
+                            map,
+                            icon,
+                            title: place.name,
+                            position: place.geometry.location,
+                        })
+                    );
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+        initMap();
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(
+                browserHasGeolocation ?
+                    "Error: The Geolocation service failed." :
+                    "Error: Your browser doesn't support geolocation."
+            );
+            infoWindow.open(map);
+        }
+        $('#choice_zones').on('change', function() {
+            var id = $(this).val();
+            $.get({
+                url: '{{ url('/') }}/shop/zone/get-coordinates/' + id,
+                dataType: 'json',
+                success: function(data) {
+                    if (zonePolygon) {
+                        zonePolygon.setMap(null);
+                    }
+                    zonePolygon = new google.maps.Polygon({
+                        paths: data.coordinates,
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: 'white',
+                        fillOpacity: 0,
+                    });
+                    zonePolygon.setMap(map);
+                    zonePolygon.getPaths().forEach(function(path) {
+                        path.forEach(function(latlng) {
+                            bounds.extend(latlng);
+                            map.fitBounds(bounds);
+                        });
+                    });
+                    map.setCenter(data.center);
+                    google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
+                        infoWindow.close();
+                        // Create a new InfoWindow.
+                        infoWindow = new google.maps.InfoWindow({
+                            position: mapsMouseEvent.latLng,
+                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(),
+                                null, 2),
+                        });
+                        var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null,
+                            2);
+                        var coordinates = JSON.parse(coordinates);
+
+                        document.getElementById('latitude').value = coordinates['lat'];
+                        document.getElementById('longitude').value = coordinates['lng'];
+                        infoWindow.open(map);
+                    });
+                },
+            });
+        });
     </script>
 @endpush
