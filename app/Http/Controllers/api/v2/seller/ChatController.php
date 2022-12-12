@@ -8,6 +8,7 @@ use App\Model\Chatting;
 use App\Model\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Pusher\Pusher;
 use function App\CPU\translate;
 
 class ChatController extends Controller
@@ -26,7 +27,7 @@ class ChatController extends Controller
 
         try {
             $messages = Chatting::with(['seller_info', 'customer', 'shop'])->where('seller_id', $seller['id'])
-            ->get();
+                ->get();
             return response()->json($messages, 200);
         } catch (\Exception $e) {
             return response()->json(['errors' => $e], 403);
@@ -44,24 +45,70 @@ class ChatController extends Controller
                 'auth-001' => translate('Your existing session token does not authorize you any more')
             ], 401);
         }
+        if ($request->message != '' || $request->hasFile('photo') || $request->hasFile('video') || $request->hasFile('audio')) {
 
-        if ($request->message == '') {
-            return response()->json(translate('type something!'), 200);
-        } else {
-            $shop_id = Shop::where('seller_id', $seller['id'])->first()->id;
             $message = $request->message;
             $time = now();
+            $image = null;
+            $video = null;
+            $audio = null;
+            if ($request->hasFile('photo')) {
+                $file = $request->file('photo');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $file->move(public_path('uploads/photo/'), $filename);
+                $image = url('public/uploads/photo/') . '/' . $filename;
+            }
+            if ($request->hasFile('audio')) {
+                $file = $request->file('audio');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.mp3';
+                $file->move(public_path('uploads/audio/'), $filename);
+                $audio = url('public/uploads/audio/') . '/' . $filename;
+            }
+            if ($request->hasFile('video')) {
+                $file = $request->file('video');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $file->move(public_path('uploads/video/'), $filename);
+                $video = url('public/uploads/video/') . '/' . $filename;
+            }
+            $shop_id = Shop::where('seller_id', $seller['id'])->first()->id;
 
-            DB::table('chattings')->insert([
-                'user_id' => $request->user_id, //user_id == seller_id
-                'shop_id' => $shop_id,
-                'seller_id' => $seller['id'],
-                'message' => $request->message,
-                'sent_by_seller' => 1,
-                'seen_by_seller' => 0,
-                'created_at' => now(),
-            ]);
-            return response()->json(['message' => $message, 'time' => $time]);
+            $saved_message = new Chatting;
+            $saved_message->user_id = $request->user_id; //user_id == seller_id
+            $saved_message->seller_id = $seller['id'];
+            $saved_message->shop_id = $shop_id;
+            $saved_message->message = $request->message;
+            $saved_message->photo = $image;
+            $saved_message->audio = $audio;
+            $saved_message->video = $video;
+            $saved_message->type = $request->type;
+            $saved_message->sent_by_seller = 1;
+            $saved_message->seen_by_seller = 0;
+            $saved_message->created_at = now();
+            $saved_message->save();
+            //return response()->json($saved_message,500);
+            $options = array(
+                'cluster' => 'eu',
+                'useTLS' => true
+            );
+            $pusher = new Pusher(
+                '245cb07e668ce2464e06',
+                '2bd8a824c0658910a83e',
+                '1523623',
+                $options
+            );
+
+            $pusher->trigger('everest22', 'sendMessege', $saved_message);
+
+            return response()->json(['message' => $message, 'photo' => $image, 'audio' => $audio, 'video' => $video, 'type' => $request->type, 'time' => $time]);
+
+        } else {
+
+
+            return response()->json(translate('type something!'), 200);
+
         }
     }
 }
