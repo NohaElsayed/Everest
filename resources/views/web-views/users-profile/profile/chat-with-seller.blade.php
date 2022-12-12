@@ -406,6 +406,7 @@
         } */
 
     </style>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
 @endpush
 
@@ -436,13 +437,13 @@
                         <div class="inbox_people">
                             <div class="headind_srch">
                                 <form
-                                    class="form-inline d-flex justify-content-center md-form form-sm active-cyan-2 mt-2">
+                                        class="form-inline d-flex justify-content-center md-form form-sm active-cyan-2 mt-2">
                                     <input
-                                        class="form-control form-control-sm {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}} w-75"
-                                        id="myInput" type="text"
-                                        placeholder="{{\App\CPU\translate('Search')}}"
-                                        aria-label="Search"
-                                        style="border: none !important;">
+                                            class="form-control form-control-sm {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}} w-75"
+                                            id="myInput" type="text"
+                                            placeholder="{{\App\CPU\translate('Search')}}"
+                                            aria-label="Search"
+                                            style="border: none !important;">
                                     <i class="fa fa-search" style="color: #92C6FF" aria-hidden="true"></i>
                                 </form>
                                 <hr>
@@ -455,9 +456,9 @@
                                             <div class="chat_people" id="chat_people">
                                                 <div class="chat_img">
                                                     <img
-                                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                        src="{{asset('storage/app/public/shop/'.$shop->image)}}"
-                                                        style="border-radius: 10px">
+                                                            onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                            src="{{asset('storage/app/public/shop/'.$shop->image)}}"
+                                                            style="border-radius: 10px">
                                                 </div>
                                                 <div class="chat_ib">
                                                     <h5 class="seller @if($shop->seen_by_customer)active-text @endif"
@@ -485,8 +486,8 @@
                                                 @if ($chat->sent_by_seller)
                                                     <div class="incoming_msg">
                                                         <div class="incoming_msg_img"><img
-                                                                src="@if($chat->image == 'def.png'){{asset('storage/app/public/'.$chat->image)}} @else {{asset('storage/app/public/shop/'.$chat->image)}} @endif"
-                                                                alt="sunil"></div>
+                                                                    src="@if($chat->image == 'def.png'){{asset('storage/app/public/'.$chat->image)}} @else {{asset('storage/app/public/shop/'.$chat->image)}} @endif"
+                                                                    alt="sunil"></div>
                                                         <div class="received_msg">
                                                             <div class="received_withd_msg">
                                                                 @if($chat->type == 'text')
@@ -537,8 +538,8 @@
                                     <div class="type_msg">
                                         <div class="input_msg_write">
                                             <form
-                                                class="form-inline d-flex justify-content-center md-form form-sm active-cyan-2 mt-2"
-                                                id="myForm">
+                                                    class="form-inline d-flex justify-content-center md-form form-sm active-cyan-2 mt-2"
+                                                    id="myForm">
                                                 @csrf
 
                                                 <input type="text" id="hidden_value" hidden
@@ -547,9 +548,9 @@
                                                        value="{{$last_chat->shop->seller_id}}" name="">
 
                                                 <input
-                                                    class="form-control form-control-sm  mb-1 {{Session::get('direction') === "rtl" ? 'ml-1' : 'mr-1'}} w-75"
-                                                    id="msgInputValue" style="background-color:#F7F8FA"
-                                                    type="text" placeholder="{{\App\CPU\translate('Send a message')}}" aria-label="Search">
+                                                        class="form-control form-control-sm  mb-1 {{Session::get('direction') === "rtl" ? 'ml-1' : 'mr-1'}} w-75"
+                                                        id="msgInputValue" style="background-color:#F7F8FA"
+                                                        type="text" placeholder="{{\App\CPU\translate('Send a message')}}" aria-label="Search">
                                                 <input type="file" class="d-none" id="photo-input-chat" name="photo" accept="image/*">
                                                 <a id="photo-input-chat-icon"><i class="fa fa-image h2 hover-zoom"></i></a> &nbsp;
                                                 <input type="file" class="d-none" id="video-input-chat" name="video" accept="video/*">
@@ -989,6 +990,27 @@
             });
         });
 
+    </script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('245cb07e668ce2464e06', {
+            cluster: 'eu'
+        });
+
+        var channel = pusher.subscribe('everest22');
+        channel.bind('sendMessege', function(data) {
+            console.log(JSON.stringify(data));
+            let seller = $(".seller");
+            for (var i = 0; i < seller.length; i++) {
+                if(seller[i].id = data.shop_id){
+                    seller[i].click();
+                }
+
+            }
+        });
     </script>
 
 @endpush

@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.4| 8.1.10",
+        "php": "^7.4| ^8.1",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
@@ -45,7 +45,8 @@
         "symfony/symfony": "5.4.x",
         "symfony/translation": "^5.4",
         "twilio/sdk": "^6.31",
-        "unicodeveloper/laravel-paystack": "^1.0"
+        "unicodeveloper/laravel-paystack": "^1.0",
+        "pusher/pusher-php-server":"^7.1"
     },
     "require-dev": {
         "amirami/localizator": "^0.7.1@alpha",

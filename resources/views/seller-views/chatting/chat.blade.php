@@ -257,6 +257,8 @@
         }
 
     </style>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
 @endpush
 
 @section('content')
@@ -820,6 +822,27 @@
             });
         });
 
+    </script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('245cb07e668ce2464e06', {
+            cluster: 'eu'
+        });
+
+        var channel = pusher.subscribe('everest22');
+        channel.bind('sendMessegeByCustomer', function(data) {
+            console.log(JSON.stringify(data));
+            let seller = $(".seller");
+            for (var i = 0; i < seller.length; i++) {
+                if(seller[i].id = data.user_id){
+                    seller[i].click();
+                }
+
+            }
+        });
     </script>
 
 

@@ -8,6 +8,7 @@ use Auth;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Pusher\Pusher;
 
 class ChattingController extends Controller
 {
@@ -46,7 +47,7 @@ class ChattingController extends Controller
             ->orderBy('created_at', 'DESC')
             ->first();
 
-        $last_chat->seen_by_customer = 0;
+        //$last_chat->seen_by_customer = 0;
         $last_chat->save();
 
         $shops = Chatting::join('shops', 'shops.id', '=', 'chattings.shop_id')
@@ -89,19 +90,32 @@ class ChattingController extends Controller
                 $file->move(public_path('uploads/video/'), $filename);
                 $video= url('public/uploads/video/').'/'.$filename;
             }
-            DB::table('chattings')->insert([
-                'user_id'          => auth('customer')->id(),
-                'shop_id'          => $request->shop_id,
-                'seller_id'        => $request->seller_id,
-                'message'          => $request->message,
-                'photo'            => $image,
-                'audio'            => $audio,
-                'video'            => $video,
-                'type'             => $request->type,
-                'sent_by_customer' => 1,
-                'seen_by_customer' => 0,
-                'created_at'       => now(),
-            ]);
+
+            $saved_message = new Chatting;
+            $saved_message->user_id       = auth('customer')->id(); //user_id == seller_id
+            $saved_message->seller_id    = $request->seller_id;
+            $saved_message->shop_id        = $request->shop_id;
+            $saved_message->message       = $request->message;
+            $saved_message->photo         = $image;
+            $saved_message->audio        = $audio;
+            $saved_message->video          = $video;
+            $saved_message->type           = $request->type;
+            $saved_message->sent_by_seller = 1;
+            $saved_message->seen_by_seller = 0;
+            $saved_message->created_at     = now();
+            $saved_message->save();
+            $options = array(
+                'cluster' => 'eu',
+                'useTLS' => true
+            );
+            $pusher = new Pusher(
+                '245cb07e668ce2464e06',
+                '2bd8a824c0658910a83e',
+                '1523623',
+                $options
+            );
+
+            $pusher->trigger('everest22', 'sendMessegeByCustomer', $saved_message);
 
             return response()->json(['message' => $message , 'photo'=>$image , 'audio'=>$audio, 'video'=>$video , 'type'=>$request->type , 'time' => $time]);
         } else {
